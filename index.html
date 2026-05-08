@@ -1,0 +1,593 @@
+<!DOCTYPE html>
+<html lang="en" dir="ltr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Hollow Knight | Chronicles of the Void</title>
+    <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Amiri:wght@400;700&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --abyss: #010204;
+            --deep-night: #050a18;
+            --soul-blue-bright: #38bdf8;
+            --soul-blue-dim: #0ea5e9;
+            --glow: rgba(56, 189, 248, 0.3);
+            --nature-green: #064e3b;
+            --text-silver: #94a3b8;
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+
+        body { 
+            background-color: var(--abyss); 
+            color: #fff; 
+            font-family: 'Amiri', serif; 
+            overflow: hidden;
+            cursor: none;
+        }
+
+        /* --- شريط تقدم التمرير --- */
+        .scroll-progress {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 3px;
+            background: var(--soul-blue-bright);
+            box-shadow: 0 0 10px var(--soul-blue-bright), 0 0 20px var(--glow);
+            z-index: 999;
+            width: 0%;
+            transition: width 0.1s;
+        }
+
+        /* --- التأثيرات الحية --- */
+        .vines {
+            position: fixed;
+            top: -20px;
+            right: -10px;
+            width: 350px;
+            height: 500px;
+            background: linear-gradient(135deg, var(--nature-green), transparent);
+            clip-path: polygon(100% 0, 100% 100%, 85% 85%, 70% 100%, 50% 75%, 30% 95%, 15% 70%, 0 0);
+            z-index: 100;
+            opacity: 0.5;
+            filter: blur(1px);
+            animation: sway 6s infinite ease-in-out;
+            pointer-events: none;
+            transition: transform 0.1s ease-out;
+        }
+
+        @keyframes sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(2deg); } }
+
+        .rain-container {
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            pointer-events: none;
+            z-index: 50;
+        }
+        .rain-drop {
+            position: absolute;
+            background: var(--soul-blue-dim);
+            width: 1px; height: 50px;
+            opacity: 0.1;
+            animation: fall linear infinite;
+        }
+        @keyframes fall { to { transform: translateY(110vh); } }
+
+        /* --- الواجهة الأولى --- */
+        #screen-one {
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1), opacity 1s;
+            z-index: 10;
+            text-align: center;
+        }
+
+        .main-title {
+            font-family: 'Cinzel';
+            font-size: clamp(4rem, 18vw, 9rem);
+            color: #fff;
+            text-shadow: 0 0 20px var(--soul-blue-bright), 0 0 50px var(--soul-blue-dim);
+            letter-spacing: 18px;
+            margin-bottom: 20px;
+            animation: titlesway 3s infinite ease-in-out;
+            min-height: 1.2em;
+        }
+        @keyframes titlesway { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.02); opacity: 1; } }
+
+        .start-btn {
+            font-family: 'Cinzel';
+            margin-top: 50px;
+            padding: 18px 80px;
+            background: transparent;
+            border: 1px solid var(--soul-blue-bright);
+            color: var(--soul-blue-bright);
+            font-size: 1.8rem;
+            cursor: none;
+            transition: 0.5s;
+            box-shadow: 0 0 15px var(--glow);
+            letter-spacing: 6px;
+            border-radius: 4px;
+        }
+
+        .start-btn:hover {
+            background: var(--soul-blue-bright);
+            color: var(--abyss);
+            box-shadow: 0 0 40px var(--soul-blue-bright);
+            transform: scale(1.05);
+        }
+
+        /* --- الواجهة الثانية --- */
+        #screen-two {
+            position: absolute;
+            top: 100vh;
+            width: 100%;
+            min-height: 100vh;
+            background: var(--abyss);
+            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1);
+            overflow-y: auto;
+            opacity: 0;
+            z-index: 5;
+        }
+
+        .active-one #screen-one { transform: translateY(-100vh); opacity: 0; }
+        .active-one #screen-two { transform: translateY(-100vh); opacity: 1; }
+
+        /* --- تنسيق المحتوى --- */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 100px 5%;
+        }
+
+        .section-header {
+            text-align: center;
+            margin-bottom: 100px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        .section-header.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+        .section-header h2 {
+            font-family: 'Cinzel';
+            font-size: 3.5rem;
+            color: var(--soul-blue-bright);
+            text-shadow: 0 0 20px var(--glow);
+            letter-spacing: 4px;
+        }
+
+        .content-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            gap: 50px;
+        }
+
+        /* --- البطاقات مع صور --- */
+        .card {
+            background: var(--deep-night);
+            border: 1px solid rgba(56, 189, 248, 0.1);
+            border-radius: 8px;
+            transition: 0.5s;
+            position: relative;
+            overflow: hidden;
+            display: flex;
+            flex-direction: column;
+            opacity: 0;
+            transform: translateY(50px);
+        }
+        .card.visible {
+            opacity: 1;
+            transform: translateY(0);
+            transition: opacity 0.8s ease, transform 0.8s ease, border-color 0.5s, box-shadow 0.5s;
+        }
+
+        .card::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
+            opacity: 0;
+            transition: opacity 0.5s;
+            pointer-events: none;
+            z-index: 0;
+        }
+        .card:hover::before {
+            opacity: 1;
+        }
+
+        .card:hover {
+            border-color: var(--soul-blue-bright);
+            box-shadow: 0 0 30px var(--glow), 0 0 10px rgba(255,255,255,0.05);
+            transform: translateY(-8px) scale(1.01);
+        }
+        .card.visible:hover {
+            transform: translateY(-8px) scale(1.01);
+        }
+
+        .card-image {
+            width: 100%;
+            height: 220px;
+            object-fit: cover;
+            border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+            transition: transform 0.5s ease, filter 0.5s ease;
+            filter: brightness(0.7) contrast(1.1);
+        }
+        .card:hover .card-image {
+            transform: scale(1.05);
+            filter: brightness(0.9) contrast(1.2);
+        }
+
+        .card-content {
+            padding: 30px 40px 40px;
+            display: flex;
+            flex-direction: column;
+            flex-grow: 1;
+        }
+
+        .card h3 { 
+            font-family: 'Cinzel'; 
+            color: var(--soul-blue-bright); 
+            margin-bottom: 15px; 
+            font-size: 1.7rem; 
+            letter-spacing: 1px;
+            text-transform: uppercase;
+            position: relative;
+            z-index: 1;
+        }
+        .card h3 small { font-family: 'Amiri'; color: var(--text-silver); font-size: 1rem; margin-right: 10px;}
+
+        .card p { 
+            line-height: 2; 
+            text-align: justify; 
+            direction: rtl; 
+            color: var(--text-silver); 
+            font-size: 1.05rem;
+            flex-grow: 1;
+            position: relative;
+            z-index: 1;
+        }
+
+        .tag {
+            font-family: 'Cinzel';
+            font-size: 0.8rem;
+            color: var(--soul-blue-bright);
+            background: rgba(14, 165, 233, 0.1);
+            padding: 5px 15px;
+            border-radius: 4px;
+            align-self: flex-start;
+            margin-top: 20px;
+            letter-spacing: 1px;
+            position: relative;
+            z-index: 1;
+        }
+
+        .lore-box {
+            grid-column: 1 / -1;
+            background: linear-gradient(135deg, var(--abyss) 0%, #03060c 100%);
+            border: 2px solid var(--soul-blue-bright);
+            box-shadow: 0 0 50px rgba(56, 189, 248, 0.1);
+            padding: 60px;
+        }
+        .lore-box h3 { font-size: 2.8rem; text-align: center;}
+        .lore-box p { font-size: 1.2rem; line-height: 2.2; }
+
+        footer {
+            margin-top: 150px;
+            text-align: center;
+            padding: 60px;
+            border-top: 1px solid #111;
+            font-family: 'Cinzel';
+            letter-spacing: 5px;
+            opacity: 0;
+            transform: translateY(30px);
+            transition: opacity 1s ease, transform 1s ease;
+        }
+        footer.visible {
+            opacity: 1;
+            transform: translateY(0);
+        }
+
+        @keyframes pulse-glow {
+            0%, 100% { text-shadow: 0 0 20px var(--soul-blue-bright), 0 0 50px var(--soul-blue-dim); }
+            50% { text-shadow: 0 0 30px var(--soul-blue-bright), 0 0 80px var(--soul-blue-dim), 0 0 100px rgba(56,189,248,0.3); }
+        }
+
+        .custom-cursor {
+            position: fixed;
+            width: 20px;
+            height: 20px;
+            border: 2px solid var(--soul-blue-bright);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 10000;
+            transition: transform 0.1s, opacity 0.3s;
+            mix-blend-mode: difference;
+        }
+        .custom-cursor.hover {
+            transform: scale(2);
+            background: rgba(56, 189, 248, 0.2);
+        }
+
+        .particle {
+            position: fixed;
+            width: 4px;
+            height: 4px;
+            background: var(--soul-blue-bright);
+            border-radius: 50%;
+            pointer-events: none;
+            z-index: 9999;
+            animation: particle-fly 1s ease-out forwards;
+        }
+        @keyframes particle-fly {
+            0% { opacity: 1; transform: scale(1); }
+            100% { opacity: 0; transform: scale(0) translate(var(--tx), var(--ty)); }
+        }
+
+        @media (max-width: 768px) {
+            .card-image { height: 180px; }
+            .content-grid { grid-template-columns: 1fr; }
+        }
+    </style>
+</head>
+<body>
+    <div class="scroll-progress" id="scrollProgress"></div>
+    <div class="custom-cursor" id="cursor"></div>
+    <div class="vines" id="vines"></div>
+    <div class="rain-container" id="rain"></div>
+
+    <div id="screen-one">
+        <h1 class="main-title" id="mainTitle"></h1>
+        <p style="color: var(--soul-blue-bright); margin-bottom: 20px; letter-spacing: 6px; font-family: 'Cinzel';">THE OBSIDIAN CHRONICLES</p>
+        <p style="color: var(--text-silver); font-size: 1.2rem; max-width: 600px; line-height: 1.8;">مرحباً بك في سجلات الهاوية. رحلة ملحمية عبر أنقاض هالونيست، حيث تلتقي الروح بالفراغ. اضغط للبدء...</p>
+        <button class="start-btn" id="startBtn" onclick="startJourney()">START</button>
+    </div>
+
+    <div id="screen-two">
+        <div class="container">
+            <div class="section-header" id="sectionHeader">
+                <h2>THE ENCYCLOPEDIA VOID</h2>
+                <div style="width: 100px; height: 3px; background: var(--soul-blue-bright); margin: 20px auto; box-shadow: 0 0 10px var(--soul-blue-bright);"></div>
+            </div>
+
+            <div class="content-grid">
+                <div class="card lore-box">
+                    <h3><small>THE GREAT LORE |</small> السجل الملحمي الكامل</h3>
+                    <p>
+                        في البدء، قبل وجود الزمن أو العقل، كانت الأرض مظلمة وباردة، تسكنها حشرات بلا فكر، تتحرك بغريزة عمياء تحت ضوء "الإشعاع" (The Radiance)—إلهة الضوء القديمة والمجنونة التي وحدت الجميع في عقل خلية واحد صامت ومطيع. لكن، من وراء الأفق، وصل "الملك الشاحب" (The Pale King)، كائن عظيم من سلالة Wyrm، كان يمتلك قوة وهب العقل والشخصية والإرادة الحرة.
+                        <br><br>
+                        بنى الملك مملكته "هالونيست" (Hallownest)، واعداً إياها بالخلود. من ضوء منارته الملكية، منح الحشرات القدرة على التفكير، البناء، العبادة، والتحدث. ازدهرت المملكة وتوسعت تحت الأرض، وبُنيت المدن الشاهقة مثل "مدينة الدموع" وحُفرت الممرات المتقاطعة. لكن الإشعاع، التي تم نسيانها، لم تقبل السقوط.
+                        <br><br>
+                        بدأت Radiance بالظهور في أحلام الحشرات، أولاً كضوء مغرٍ، ثم كعدوى برتقالية قيحية (The Infection) تسلب العقول وتحول الأجساد إلى وحوش تنفجر بالضوء. حاول الملك كل شيء لإيقافها؛ بنى الحصون وتطوعت الجيوش، لكن العدوى كانت تخترق الأحلام. في محاولة يائسة، قرر الملك استخدام قوة "الفراغ" (The Void)—مادة غامضة ومظلمة تسكن أعمق نقطة في الهاوية، لا تملك عقلاً ولا إرادة، وبالتالي لا يمكن للعدوى أن تخترقها.
+                        <br><br>
+                        قام الملك بخلق ملايين "الأوعية" (Vessels)، كائنات من الفراغ محبوسة داخل قشور من النور، ورمى بها في قاع الهاوية. الهدف كان إيجاد وعاء "نقي" تماماً، بلا مشاعر، بلا فكر، وبلا إرادة ليكسرها، ليكون قادراً على حبس Radiance داخله للأبد. من بين ملايين الفشلة، صعد "Hollow Knight" الأصلي، وظن الملك أنه الوعاء المثالي.
+                        <br><br>
+                        تم ختم Hollow Knight داخل "البيضة السوداء" (The Black Egg) مع Radiance بداخله، وحُمي الختم بثلاثة "حالمين" (Dreamers) ناموا إلى الأبد لحراسته. ظن الجميع أن المملكة نُجيت، لكن Hollow Knight لم يكن نقياً؛ كان يحمل "بذرة" من المشاعر (ربما حب الأب أو الخوف)، مما سمح لـ Radiance باختراقه. ثم تسربت العدوى مرة أخرى، وسقطت هالونيست في صمت أبدي، مليئة بالوحوش الهائمة.
+                        <br><br>
+                        هنا تبدأ رحلتك. أنت وعاء آخر، وعاء صغير، مجهول الاسم، هربت من الهاوية وسمعت نداء هالونيست الميتة. أنت تحمل مسماراً قديماً، وعقلك خالي كالفراغ. مهمتك هي الصعود من الحطام، هزيمة الحالمين، مواجهة Hollow Knight الفاشل، واحتواء العدوى تماماً، أو كسر القيد نهائياً بمواجهة مصدر الضوء نفسه وتدميره للأبد بمساعدة الفراغ. أنت لست بطلاً، أنت مجرد ظل يحمل مسماراً ليغير مصير عالم ميت.
+                    </p>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://cdna.artstation.com/p/assets/images/images/046/612/734/large/tomas-balsa-sanz-screenshot.jpg?1645539550" alt="Hollow Knight Nail Weapon" loading="lazy">
+                    <div class="card-content">
+                        <h3>WEAPONS | الأسلحة والدفاع</h3>
+                        <p>رحلتك لا تعتمد على الهروب، بل على المواجهة. مسمارك (Nail) هو شرفك وقوتك الأساسية. تبدأ بـ "المسمار القديم" (Old Nail)، الصدئ والضعيف، لكن عبر الاستكشاف ستحصل على "Pale Ore" النادر، الذي يسمح لـ Nailsmith بصقله أربع مرات، ليصبح "المسمار النقي" (Pure Nail)، نصل أسطوري قادر على قطع القدر نفسه. بالإضافة للمسمار، تمتلك القدرات السحرية (Spells) مثل "Vengeful Spirit" التي تطلق طاقة السول، وتطورها "Shade Soul" التي تدمج الفراغ، مما يضاعف الضرر ويسمح باختراق الأعداء والحواجز.</p>
+                        <span class="tag">Arsenal</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://cdn.wikimg.net/en/hkwiki/images/thumb/0/0f/Icon_HK_Shade_Cloak_Art.png/640px-Icon_HK_Shade_Cloak_Art.png" alt="Hollow Knight Shade Cloak Ability" loading="lazy">
+                    <div class="card-content">
+                        <h3>ABILITIES | القدرات الحركية</h3>
+                        <p>هالونيست متاهة عملاقة، ولا يمكنك الوصول لأسرارها بلا قدرات خاصة. ستجد "Dash" (Mothwing Cloak) للتحرك السريع في الهواء، وتطوره "Shade Cloak" الذي يسمح لك بالمرور عبر الأعداء والأسلحة دون ضرر بفضل قوة الفراغ. "Mantis Claw" تسمح لك بتسلق الجدران، بينما "Monarch Wings" تمنحك قفزة ثانية في الهواء. وأخيراً "Crystal Heart" التي تطلقك في طيران أفقي سريع عبر الكهوف الشاسعة. كل قدرة تفتح لك مناطق جديدة وتغير طريقة قتالك.</p>
+                        <span class="tag">Movement</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://i.etsystatic.com/43896620/r/il/0c0a18/5733606801/il_570xN.5733606801_esnl.jpg" alt="Hollow Knight Hallownest Map" loading="lazy">
+                    <div class="card-content">
+                        <h3>LOCATIONS | مناطق المملكة</h3>
+                        <p>ستتنقل بين هدوء Dirtmouth الحزين فوق الأرض، إلى Forgotten Crossroads التي لوثتها العدوى البرتقالية. ستزور Greenpath حيث الطبيعة الخضراء المورقة والمشعة بضوء Unn، وتمر عبر Fungal Wastes المليئة بالفطريات وقبيلة Mantis. العاصمة "City of Tears" الممطرة للأبد، و "Deepnest" حيث الرعب والظلام والرغبة في الموت. وأخيراً أعمق بقعة "The Abyss" حيث ولد الفراغ و "White Palace" في عالم الأحلام حيث يرقد الملك الشاحب.</p>
+                        <span class="tag">Environment</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://cdna.artstation.com/p/assets/images/images/012/376/644/large/jarrett-kelly-knight-8-horrifying-soul-baby-version.jpg?1534464275" alt="Hollow Knight Void Soul Artwork" loading="lazy">
+                    <div class="card-content">
+                        <h3>SOUL & VOID | الروح والفراغ</h3>
+                        <p>هناك قوتان أساسيتان تحكمان هذا العالم. "الروح" (Soul) هي الطاقة الحيوية المشعة للأعداء والكائنات، التي تجمعها بالهجوم عليهم. الروح تسمح لك بـ "Focus" لشفاء نفسك، أو إطلاق السحر (Spells) الهجومي. على النقيض، "الفراغ" (Void) هو مادة الهاوية المظلمة والصامتة. أنت وعاء من الفراغ، وأقوى قدراتك هي التي تدمج هذه المادة مع هجومك، مما يجعلك الكائن الوحيد القادر على تدمير الإشعاع، لأن الفراغ هو نقيض الضوء.</p>
+                        <span class="tag">Forces</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/cbb10ce3-6329-4e23-a896-e6f38a75023f/d8a1ev8-44484525-d297-43a4-b7e6-bf615b31beab.jpg/v1/fill/w_650,h_582,q_75,strp/hornet___a_hollow_knight_character_by_teamcherry_d8a1ev8-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTgyIiwicGF0aCI6Ii9mL2NiYjEwY2UzLTYzMjktNGUyMy1hODk2LWU2ZjM4YTc1MDIzZi9kOGExZXY4LTQ0NDg0NTI1LWQyOTctNDNhNC1iN2U2LWJmNjE1YjMxYmVhYi5qcGciLCJ3aWR0aCI6Ijw9NjUwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.caKGGvniJpgmyxhMH1kJxMi1lxtOJeldW7NebN3lgpY" alt="Hollow Knight Hornet Character" loading="lazy">
+                    <div class="card-content">
+                        <h3>CHARACTERS | الأساطير الحيّة</h3>
+                        <p>لن تكون وحيداً في هذا الظلام. ستلتقي بـ "Hornet" الحارسة الملكية الأنيقة التي تختبر قوتك وتساعدك في فهم دورك. "Quirrel" المستكشف الحكيم الذي يحمل قناع Dreamer فقد ذاكرته، و "Sly" التاجر الذي كان أحد أقوى معلمي المسمار. ستقابل الأعداء العظماء مثل "The Hollow Knight" الأصلي المحبوس، والزعماء الاختياريين مثل "Grimm" ملك الكوابيس، و "The Radiance" الإلهة التي تحاول قتلها.</p>
+                        <span class="tag">NPCS</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/de973c07-b9b6-49c5-bef0-ce6d550bc902/ddfuvg4-7dbf21da-278e-43d0-bc1d-04e507c426e4.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9kZTk3M2MwNy1iOWI2LTQ5YzUtYmVmMC1jZTZkNTUwYmM5MDIvZGRmdXZnNC03ZGJmMjFkYS0yNzhlLTQzZDAtYmMxZC0wNGU1MDdjNDI2ZTQuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.nEl_lt75IIn32tG5Gub_Slo-llEbsINNgC8RDSneZsw" alt="Hollow Knight Voidheart Charm" loading="lazy">
+                    <div class="card-content">
+                        <h3>CHARMS | التعاويذ التفاعلية</h3>
+                        <p>Charms هي عناصر سحرية تمنحك فوائد وقدرات سلبية (Passives). أنت تمتلك "Notches" (فتحات) محدودة لتجهيز هذه التعاويذ. هناك 40 تعويذة مختلفة، مثل "Quick Slash" التي تزيد سرعة الهجوم بالمسمار، و "Shaman Stone" التي تزيد ضرر السحر. التعاويذ النادرة مثل "Void Heart" هي التي تفتح لك النهايات الحقيقية، بينما "Fragile" Charms تنكسر عند الموت، لكن Divine يمكنها جعلها "Unbreakable" مقابل Geo كثير.</p>
+                        <span class="tag">Customization</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://static.wikia.nocookie.net/hollowknight/images/9/9d/Large_Geo_Catch.png/revision/latest?cb=20180704022833" alt="Hollow Knight Geo Currency" loading="lazy">
+                    <div class="card-content">
+                        <h3>ITEMS | الكنوز والعملات</h3>
+                        <p>"Geo" هي العملة الأساسية في هالونيست، تتساقط من الأعداء وتجدها في الكهوف. ستحتاجها لشراء التعاويذ، تطوير المسمار، وفتح محطات Stag و Bench. ستحصل على عناصر مهمة مثل "Hollow Knight Map" و "Dream Nail"—مسمار لا يقتل الجسد بل يدخل الأحلام ويكشف أفكار الموتى. "Rancid Eggs" تُعيد Shade الخاص بك من أي مكان، بينما "Pale Ore" هو أهم معدن لتطوير المسمار.</p>
+                        <span class="tag">Resources</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://images.alphacoders.com/806/thumb-1920-806256.jpg" alt="Hollow Knight Atmospheric Beginning" loading="lazy">
+                    <div class="card-content">
+                        <h3>BEGINNING | العبور الملكي</h3>
+                        <p>تبدأ رحلتك في "King's Pass"، الممر القديم الذي تسلكه الأوعية الهاربة من الهاوية. ستواجه أعداء ضعاف وتتعلم آليات الحركة والهجوم الأساسية. ستحصل على أول Charm وهو "Fury of the Fallen" قبل أن تصل إلى محطة Stag المهجورة في Dirtmouth. هنا، ستلتقي بـ Elderbug، آخر شيوخ القرية، الذي يشرح لك أن هالونيست ماتت، وأن هناك أسراراً مدفونة تحت الأرض لا يجب عليك الاقتراب منها.</p>
+                        <span class="tag">Origin</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://cdna.artstation.com/p/assets/images/images/012/376/644/large/jarrett-kelly-knight-8-horrifying-soul-baby-version.jpg?1534464275" alt="Hollow Knight Dreamers" loading="lazy">
+                    <div class="card-content">
+                        <h3>DREAMERS | الحالمون الثلاثة</h3>
+                        <p>هم حراس الختم على البيضة السوداء. وافقوا على النوم للأبد لحماية المملكة. عليك إيجادهم وهزيمتهم في عالم الأحلام باستخدام Dream Nail. "Monomon the Teacher" في Soul Sanctum، "Lurien the Watcher" في Spire و "Herrah the Beast" في Deepnest (أم Hornet). هزيمتهم هي الخطوة الأساسية لفتح الختم ومواجهة Hollow Knight.</p>
+                        <span class="tag">Seals</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://images.alphacoders.com/806/thumb-1920-806256.jpg" alt="Hollow Knight Boss Battle" loading="lazy">
+                    <div class="card-content">
+                        <h3>BOSSES | الرؤساء والزعماء</h3>
+                        <p>هناك أكثر من 47 زعيماً مختلفاً، من "False Knight" الضعيف في Crossroads، إلى "The Hollow Knight" الملحمي المحبوس. ستواجه "Mantis Lords" الاختياريين، و "Watcher Knights" الستة الذين يحمون Lurien. أقوى الزعماء هم "Nightmare King Grimm" في إضافة DLC، و "Radiance" الإلهة التي تحاول قتلها. كل رئيس يمنحك Geo، تعاويذ، أو قدرات جديدة، ويفتح لك طرقاً كانت مغلقة.</p>
+                        <span class="tag">Challenges</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <img class="card-image" src="https://cdna.artstation.com/p/assets/images/images/012/376/644/large/jarrett-kelly-knight-8-horrifying-soul-baby-version.jpg?1534464275" alt="Hollow Knight Ending Fate" loading="lazy">
+                    <div class="card-content">
+                        <h3>THE FATE | النهايات الخمسة</h3>
+                        <p>رحلتك لها نهايات مختلفة بناءً على اختياراتك. النهاية الأساسية "The Hollow Knight": أن تأخذ مكان الوعاء القديم وتحبس العدوى داخلك. النهاية الثانية "Sealed Siblings": نفس النهاية لكن Hornet تُحبس معك. النهاية الثالثة الحقيقية "Dream No More": مواجهة Radiance وقتلها في عالم الأحلام لإنهاء العدوى. والنهايتين الرابعة والخامسة من DLC Godmaster "Embrace the Void": أن تصبح إله الفراغ وتدمر Radiance نهائياً.</p>
+                        <span class="tag">Destiny</span>
+                    </div>
+                </div>
+            </div>
+
+            <footer id="mainFooter">
+                <div style="color: var(--soul-blue-bright); font-size: 2rem; text-shadow: 0 0 15px var(--glow);">MADE BY: MONTADER WALHAN</div>
+                <p style="margin-top: 15px; letter-spacing: 4px; color: var(--text-silver); opacity: 0.5;">&copy; 2026 | Hollow Knight Fan Project</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        function typeWriter(element, text, speed = 120) {
+            let i = 0;
+            element.innerHTML = '';
+            function type() {
+                if (i < text.length) {
+                    element.innerHTML += text.charAt(i);
+                    i++;
+                    setTimeout(type, speed);
+                }
+            }
+            type();
+        }
+
+        window.addEventListener('load', () => {
+            setTimeout(() => {
+                typeWriter(document.getElementById('mainTitle'), 'HOLLOW KNIGHT', 150);
+            }, 500);
+        });
+
+        function startJourney() {
+            document.body.classList.add('active-one');
+            setTimeout(() => {
+                document.body.style.overflowY = 'auto';
+            }, 1000);
+            createParticles(event);
+        }
+
+        function createRain() {
+            const container = document.getElementById('rain');
+            for(let i=0; i<120; i++) {
+                const drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDuration = (Math.random() * 0.4 + 0.4) + 's';
+                drop.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(drop);
+            }
+        }
+        window.onload = createRain;
+
+        document.addEventListener('mousemove', (e) => {
+            const vines = document.getElementById('vines');
+            const x = (e.clientX / window.innerWidth) * 5;
+            const y = (e.clientY / window.innerHeight) * 3;
+            vines.style.transform = `rotate(${x}deg) translateY(${y}px)`;
+        });
+
+        window.addEventListener('scroll', () => {
+            const scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            const scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            const scrolled = (scrollTop / scrollHeight) * 100;
+            document.getElementById('scrollProgress').style.width = scrolled + '%';
+        });
+
+        const observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
+
+        const observer = new IntersectionObserver((entries) => {
+            entries.forEach(entry => {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
+
+        document.querySelectorAll('.card').forEach(card => observer.observe(card));
+        observer.observe(document.getElementById('sectionHeader'));
+        observer.observe(document.getElementById('mainFooter'));
+
+        const cursor = document.getElementById('cursor');
+        document.addEventListener('mousemove', (e) => {
+            cursor.style.left = e.clientX - 10 + 'px';
+            cursor.style.top = e.clientY - 10 + 'px';
+        });
+
+        document.querySelectorAll('button, a, .card').forEach(el => {
+            el.addEventListener('mouseenter', () => cursor.classList.add('hover'));
+            el.addEventListener('mouseleave', () => cursor.classList.remove('hover'));
+        });
+
+        function createParticles(e) {
+            const colors = ['var(--soul-blue-bright)', 'var(--soul-blue-dim)', '#fff'];
+            for (let i = 0; i < 12; i++) {
+                const particle = document.createElement('div');
+                particle.className = 'particle';
+                particle.style.left = e.clientX + 'px';
+                particle.style.top = e.clientY + 'px';
+                particle.style.background = colors[Math.floor(Math.random() * colors.length)];
+                const angle = (Math.PI * 2 * i) / 12;
+                const distance = 50 + Math.random() * 100;
+                particle.style.setProperty('--tx', Math.cos(angle) * distance + 'px');
+                particle.style.setProperty('--ty', Math.sin(angle) * distance + 'px');
+                document.body.appendChild(particle);
+                setTimeout(() => particle.remove(), 1000);
+            }
+        }
+
+        document.addEventListener('click', createParticles);
+
+        setTimeout(() => {
+            document.querySelector('.main-title').style.animation = 'titlesway 3s infinite ease-in-out, pulse-glow 4s infinite ease-in-out';
+        }, 3000);
+    </script>
+</body>
+</html>
