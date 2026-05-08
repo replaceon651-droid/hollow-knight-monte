@@ -84,13 +84,12 @@
 
         .main-title {
             font-family: 'Cinzel';
-            font-size: clamp(4rem, 18vw, 9rem);
+            font-size: clamp(3rem, 15vw, 7rem);
             color: #fff;
             text-shadow: 0 0 20px var(--soul-blue-bright), 0 0 50px var(--soul-blue-dim);
-            letter-spacing: 18px;
+            letter-spacing: 12px;
             margin-bottom: 20px;
             animation: titlesway 3s infinite ease-in-out;
-            min-height: 1.2em;
         }
         @keyframes titlesway { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.02); opacity: 1; } }
 
@@ -158,7 +157,7 @@
 
         .content-grid {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(400px, 1fr));
+            grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
             gap: 50px;
         }
 
@@ -206,13 +205,17 @@
             transform: translateY(-8px) scale(1.01);
         }
 
+1.01);
+        }
+
         .card-image {
             width: 100%;
-            height: 220px;
+            height: 200px;
             object-fit: cover;
             border-bottom: 1px solid rgba(56, 189, 248, 0.1);
             transition: transform 0.5s ease, filter 0.5s ease;
             filter: brightness(0.7) contrast(1.1);
+            background: linear-gradient(135deg, var(--deep-night), var(--abyss));
         }
         .card:hover .card-image {
             transform: scale(1.05);
@@ -220,7 +223,7 @@
         }
 
         .card-content {
-            padding: 30px 40px 40px;
+            padding: 30px 35px 35px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -230,20 +233,20 @@
             font-family: 'Cinzel'; 
             color: var(--soul-blue-bright); 
             margin-bottom: 15px; 
-            font-size: 1.7rem; 
+            font-size: 1.5rem; 
             letter-spacing: 1px;
             text-transform: uppercase;
             position: relative;
             z-index: 1;
         }
-        .card h3 small { font-family: 'Amiri'; color: var(--text-silver); font-size: 1rem; margin-right: 10px;}
+        .card h3 small { font-family: 'Amiri'; color: var(--text-silver); font-size: 0.9rem; margin-right: 8px;}
 
         .card p { 
-            line-height: 2; 
+            line-height: 1.8; 
             text-align: justify; 
             direction: rtl; 
             color: var(--text-silver); 
-            font-size: 1.05rem;
+            font-size: 1rem;
             flex-grow: 1;
             position: relative;
             z-index: 1;
@@ -251,13 +254,13 @@
 
         .tag {
             font-family: 'Cinzel';
-            font-size: 0.8rem;
+            font-size: 0.75rem;
             color: var(--soul-blue-bright);
             background: rgba(14, 165, 233, 0.1);
-            padding: 5px 15px;
+            padding: 5px 12px;
             border-radius: 4px;
             align-self: flex-start;
-            margin-top: 20px;
+            margin-top: 15px;
             letter-spacing: 1px;
             position: relative;
             z-index: 1;
@@ -268,15 +271,15 @@
             background: linear-gradient(135deg, var(--abyss) 0%, #03060c 100%);
             border: 2px solid var(--soul-blue-bright);
             box-shadow: 0 0 50px rgba(56, 189, 248, 0.1);
-            padding: 60px;
+            padding: 50px;
         }
-        .lore-box h3 { font-size: 2.8rem; text-align: center;}
-        .lore-box p { font-size: 1.2rem; line-height: 2.2; }
+        .lore-box h3 { font-size: 2.5rem; text-align: center;}
+        .lore-box p { font-size: 1.1rem; line-height: 2; }
 
         footer {
-            margin-top: 150px;
+            margin-top: 100px;
             text-align: center;
-            padding: 60px;
+            padding: 50px;
             border-top: 1px solid #111;
             font-family: 'Cinzel';
             letter-spacing: 5px;
@@ -295,8 +298,14 @@
         }
 
         @media (max-width: 768px) {
-            .card-image { height: 180px; }
-            .content-grid { grid-template-columns: 1fr; }
+            .main-title { font-size: clamp(2rem, 12vw, 5rem); letter-spacing: 6px; }
+            .start-btn { padding: 15px 50px; font-size: 1.4rem; }
+            .card-image { height: 160px; }
+            .content-grid { grid-template-columns: 1fr; gap: 30px; }
+            .container { padding: 60px 4%; }
+            .section-header h2 { font-size: 2.5rem; }
+            .lore-box { padding: 30px; }
+            .lore-box h3 { font-size: 1.8rem; }
         }
     </style>
 </head>
@@ -306,9 +315,9 @@
     <div class="rain-container" id="rain"></div>
 
     <div id="screen-one">
-        <h1 class="main-title" id="mainTitle"></h1>
+        <h1 class="main-title">HOLLOW KNIGHT</h1>
         <p style="color: var(--soul-blue-bright); margin-bottom: 20px; letter-spacing: 6px; font-family: 'Cinzel';">THE OBSIDIAN CHRONICLES</p>
-        <p style="color: var(--text-silver); font-size: 1.2rem; max-width: 600px; line-height: 1.8;">مرحباً بك في سجلات الهاوية. رحلة ملحمية عبر أنقاض هالونيست، حيث تلتقي الروح بالفراغ. اضغط للبدء...</p>
+        <p style="color: var(--text-silver); font-size: 1.2rem; max-width: 600px; line-height: 1.8; padding: 0 20px;">مرحباً بك في سجلات الهاوية. رحلة ملحمية عبر أنقاض هالونيست، حيث تلتقي الروح بالفراغ. اضغط للبدء...</p>
         <button class="start-btn" id="startBtn" onclick="startJourney()">START</button>
     </div>
 
@@ -338,7 +347,7 @@
                 </div>
 
                 <div class="card">
-                    <img class="card-image" src="https://cdna.artstation.com/p/assets/images/images/046/612/734/large/tomas-balsa-sanz-screenshot.jpg?1645539550" alt="Hollow Knight Nail Weapon" loading="lazy">
+                    <div class="card-image" style="background: linear-gradient(135deg, #0a1929, #051018); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">⚔️ NAIL</div>
                     <div class="card-content">
                         <h3>WEAPONS | الأسلحة والدفاع</h3>
                         <p>رحلتك لا تعتمد على الهروب، بل على المواجهة. مسمارك (Nail) هو شرفك وقوتك الأساسية. تبدأ بـ "المسمار القديم" (Old Nail)، الصدئ والضعيف، لكن عبر الاستكشاف ستحصل على "Pale Ore" النادر، الذي يسمح لـ Nailsmith بصقله أربع مرات، ليصبح "المسمار النقي" (Pure Nail)، نصل أسطوري قادر على قطع القدر نفسه.</p>
@@ -347,7 +356,7 @@
                 </div>
 
                 <div class="card">
-                    <img class="card-image" src="https://cdn.wikimg.net/en/hkwiki/images/thumb/0/0f/Icon_HK_Shade_Cloak_Art.png/640px-Icon_HK_Shade_Cloak_Art.png" alt="Hollow Knight Shade Cloak" loading="lazy">
+                    <div class="card-image" style="background: linear-gradient(135deg, #0a1f1a, #051210); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">💨 DASH</div>
                     <div class="card-content">
                         <h3>ABILITIES | القدرات الحركية</h3>
                         <p>هالونيست متاهة عملاقة، ولا يمكنك الوصول لأسرارها بلا قدرات خاصة. ستجد "Dash" (Mothwing Cloak) للتحرك السريع في الهواء، وتطوره "Shade Cloak" الذي يسمح لك بالمرور عبر الأعداء والأسلحة دون ضرر بفضل قوة الفراغ.</p>
@@ -356,7 +365,7 @@
                 </div>
 
                 <div class="card">
-                    <img class="card-image" src="https://i.etsystatic.com/43896620/r/il/0c0a18/5733606801/il_570xN.5733606801_esnl.jpg" alt="Hallownest Map" loading="lazy">
+                    <div class="card-image" style="background: linear-gradient(135deg, #1a0a29, #100518); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">🗺️ MAP</div>
                     <div class="card-content">
                         <h3>LOCATIONS | مناطق المملكة</h3>
                         <p>ستتنقل بين هدوء Dirtmouth الحزين فوق الأرض، إلى Forgotten Crossroads التي لوثتها العدوى البرتقالية. ستزور Greenpath حيث الطبيعة الخضراء المورقة والمشعة بضوء Unn.</p>
@@ -365,7 +374,7 @@
                 </div>
 
                 <div class="card">
-                    <img class="card-image" src="https://cdna.artstation.com/p/assets/images/images/012/376/644/large/jarrett-kelly-knight-8-horrifying-soul-baby-version.jpg?1534464275" alt="Void Soul" loading="lazy">
+                    <div class="card-image" style="background: linear-gradient(135deg, #0a0a29, #050518); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">⚫ VOID</div>
                     <div class="card-content">
                         <h3>SOUL & VOID | الروح والفراغ</h3>
                         <p>هناك قوتان أساسيتان تحكمان هذا العالم. "الروح" (Soul) هي الطاقة الحيوية المشعة للأعداء والكائنات، التي تجمعها بالهجوم عليهم. "الفراغ" (Void) هو مادة الهاوية المظلمة والصامتة.</p>
@@ -374,7 +383,7 @@
                 </div>
 
                 <div class="card">
-                    <img class="card-image" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/cbb10ce3-6329-4e23-a896-e6f38a75023f/d8a1ev8-44484525-d297-43a4-b7e6-bf615b31beab.jpg/v1/fill/w_650,h_582,q_75,strp/hornet___a_hollow_knight_character_by_teamcherry_d8a1ev8-fullview.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7ImhlaWdodCI6Ijw9NTgyIiwicGF0aCI6Ii9mL2NiYjEwY2UzLTYzMjktNGUyMy1hODk2LWU2ZjM4YTc1MDIzZi9kOGExZXY4LTQ0NDg0NTI1LWQyOTctNDNhNC1iN2U2LWJmNjE1YjMxYmVhYi5qcGciLCJ3aWR0aCI6Ijw9NjUwIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmltYWdlLm9wZXJhdGlvbnMiXX0.caKGGvniJpgmyxhMH1kJxMi1lxtOJeldW7NebN3lgpY" alt="Hornet Character" loading="lazy">
+                    <div class="card-image" style="background: linear-gradient(135deg, #290a1a, #180510); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">👤 HORNET</div>
                     <div class="card-content">
                         <h3>CHARACTERS | الأساطير الحيّة</h3>
                         <p>لن تكون وحيداً في هذا الظلام. ستلتقي بـ "Hornet" الحارسة الملكية الأنيقة التي تختبر قوتك وتساعدك في فهم دورك.</p>
@@ -383,7 +392,7 @@
                 </div>
 
                 <div class="card">
-                    <img class="card-image" src="https://images-wixmp-ed30a86b8c4ca887773594c2.wixmp.com/f/de973c07-b9b6-49c5-bef0-ce6d550bc902/ddfuvg4-7dbf21da-278e-43d0-bc1d-04e507c426e4.jpg?token=eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJzdWIiOiJ1cm46YXBwOjdlMGQxODg5ODIyNjQzNzNhNWYwZDQxNWVhMGQyNmUwIiwiaXNzIjoidXJuOmFwcDo3ZTBkMTg4OTgyMjY0MzczYTVmMGQ0MTVlYTBkMjZlMCIsIm9iaiI6W1t7InBhdGgiOiIvZi9kZTk3M2MwNy1iOWI2LTQ5YzUtYmVmMC1jZTZkNTUwYmM5MDIvZGRmdXZnNC03ZGJmMjFkYS0yNzhlLTQzZDAtYmMxZC0wNGU1MDdjNDI2ZTQuanBnIn1dXSwiYXVkIjpbInVybjpzZXJ2aWNlOmZpbGUuZG93bmxvYWQiXX0.nEl_lt75IIn32tG5Gub_Slo-llEbsINNgC8RDSneZsw" alt="Voidheart Charm" loading="lazy">
+                    <div class="card-image" style="background: linear-gradient(135deg, #1a290a, #101805); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">✦ CHARM</div>
                     <div class="card-content">
                         <h3>CHARMS | التعاويذ التفاعلية</h3>
                         <p>Charms هي عناصر سحرية تمنحك فوائد وقدرات سلبية (Passives). أنت تمتلك "Notches" (فتحات) محدودة لتجهيز هذه التعاويذ.</p>
@@ -392,7 +401,7 @@
                 </div>
 
                 <div class="card">
-                    <img class="card-image" src="https://static.wikia.nocookie.net/hollowknight/images/9/9d/Large_Geo_Catch.png/revision/latest?cb=20180704022833" alt="Geo Currency" loading="lazy">
+                    <div class="card-image" style="background: linear-gradient(135deg, #29290a, #181805); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">💰 GEO</div>
                     <div class="card-content">
                         <h3>ITEMS | الكنوز والعملات</h3>
                         <p>"Geo" هي العملة الأساسية في هالونيست، تتساقط من الأعداء وتجدها في الكهوف. ستحتاجها لشراء التعاويذ، تطوير المسمار، وفتح محطات Stag و Bench.</p>
@@ -401,7 +410,7 @@
                 </div>
 
                 <div class="card">
-                    <img class="card-image" src="https://images.alphacoders.com/806/thumb-1920-806256.jpg" alt="Atmospheric" loading="lazy">
+                    <div class="card-image" style="background: linear-gradient(135deg, #0a2929, #051818); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">🚪 START</div>
                     <div class="card-content">
                         <h3>BEGINNING | العبور الملكي</h3>
                         <p>تبدأ رحلتك في "King's Pass"، الممر القديم الذي تسلكه الأوعية الهاربة من الهاوية. ستواجه أعداء ضعاف وتتعلم آليات الحركة والهجوم الأساسية.</p>
@@ -410,8 +419,7 @@
                 </div>
 
                 <div class="card">
-                    <img class="card-image" src="https://cdna.artstation.com/p/assets/images/images/012/376/644/large/jarrett-kelly-knight-8-horrifying-soul-baby-version.jpg?1534464275" alt="Dreamers" loading="lazy">
+                    <div class="card-image" style="background: linear-gradient(135deg, #290a29, #180518); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">💤 DREAM</div>
                     <div class="card-content">
                         <h3>DREAMERS | الحالمون الثلاثة</h3>
-                        <p>هم حراس الختم على البيضة السوداء. وافقوا على النوم للأبد لحماية المملكة. عليك إيجادهم وهزيمتهم في عالم الأحلام باستخدام Dream Nail.</p>
-                        <span class="tag">Seals</span
+                        <p>هم حراس الختم على البيضة السوداء. وافقوا على النوم للأبد لحماية المملكة.
