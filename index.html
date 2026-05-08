@@ -17,7 +17,7 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-        
+
         html, body { 
             background-color: var(--abyss); 
             color: #fff; 
@@ -34,7 +34,7 @@
             height: 3px;
             background: var(--soul-blue-bright);
             box-shadow: 0 0 10px var(--soul-blue-bright);
-            z-index: 999;
+            z-index: 9999;
             width: 0%;
             transition: width 0.1s;
         }
@@ -85,7 +85,7 @@
             justify-content: center;
             z-index: 10;
             text-align: center;
-            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1), opacity 1s;
+            background: var(--abyss);
         }
 
         .main-title {
@@ -112,6 +112,7 @@
             box-shadow: 0 0 15px var(--glow);
             letter-spacing: 6px;
             border-radius: 4px;
+            -webkit-tap-highlight-color: transparent;
         }
 
         .start-btn:hover, .start-btn:active {
@@ -121,32 +122,18 @@
             transform: scale(1.05);
         }
 
-        /* الواجهة الثانية */
+        /* الواجهة الثانية - مخفية افتراضياً */
         #screen-two {
-            position: fixed;
+            display: none;
+            position: absolute;
             top: 0;
             left: 0;
             width: 100%;
-            height: 100vh;
+            min-height: 100vh;
             background: var(--abyss);
+            z-index: 20;
             overflow-y: auto;
-            z-index: 5;
-            opacity: 0;
-            pointer-events: none;
-            transition: opacity 0.8s ease;
-            padding-top: 50px;
-        }
-
-        /* لما نفعل الانتقال */
-        body.active-one #screen-one {
-            transform: translateY(-100vh);
-            opacity: 0;
-            pointer-events: none;
-        }
-        
-        body.active-one #screen-two {
-            opacity: 1;
-            pointer-events: auto;
+            overflow-x: hidden;
         }
 
         .container {
@@ -303,7 +290,7 @@
         <h1 class="main-title">HOLLOW KNIGHT</h1>
         <p style="color: var(--soul-blue-bright); margin-bottom: 20px; letter-spacing: 6px; font-family: 'Cinzel';">THE OBSIDIAN CHRONICLES</p>
         <p style="color: var(--text-silver); font-size: 1.2rem; max-width: 600px; line-height: 1.8; padding: 0 20px;">مرحباً بك في سجلات الهاوية. رحلة ملحمية عبر أنقاض هالونيست، حيث تلتقي الروح بالفراغ. اضغط للبدء...</p>
-        <button class="start-btn" onclick="startJourney()">START</button>
+        <button class="start-btn" id="startBtn">START</button>
     </div>
 
     <!-- الواجهة الثانية -->
@@ -440,19 +427,25 @@
     </div>
 
     <script>
-        function startJourney() {
-            // أضف الكلاس للجسم
-            document.body.classList.add('active-one');
-            
-            // فعل التمرير بعد الانتقال
-            setTimeout(() => {
-                document.body.style.overflow = 'hidden';
-                const screenTwo = document.getElementById('screen-two');
-                screenTwo.style.overflowY = 'auto';
-            }, 1200);
-        }
+        // دالة الانتقال - مضمونة 100%
+        document.getElementById('startBtn').addEventListener('click', function() {
+            // إخفاء الواجهة الأولى
+            document.getElementById('screen-one').style.display = 'none';
 
-        // المطر
-        function createRain() {
-            const container = document.getElementById('rain');
-            for(let i=0; i<60;
+            // إظهار الواجهة الثانية
+            var screenTwo = document.getElementById('screen-two');
+            screenTwo.style.display = 'block';
+
+            // تفعيل التمرير
+            document.body.style.overflow = 'auto';
+            document.body.style.overflowX = 'hidden';
+
+            // Scroll to top
+            window.scrollTo(0, 0);
+
+            // تفعيل الـ fade-in للعناصر
+            setTimeout(function() {
+                document.getElementById('sectionHeader').classList.add('visible');
+                document.querySelectorAll('.card').forEach(function(card, index) {
+                    setTimeout(function() {
+                        card.classList.ad
