@@ -16,13 +16,15 @@
             --text-silver: #94a3b8;
         }
 
-        * { margin: 0; padding: 0; box-sizing: border-box; scroll-behavior: smooth; }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
         
-        body { 
+        html, body { 
             background-color: var(--abyss); 
             color: #fff; 
             font-family: 'Amiri', serif; 
             overflow: hidden;
+            height: 100%;
+            width: 100%;
         }
 
         .scroll-progress {
@@ -31,7 +33,7 @@
             left: 0;
             height: 3px;
             background: var(--soul-blue-bright);
-            box-shadow: 0 0 10px var(--soul-blue-bright), 0 0 20px var(--glow);
+            box-shadow: 0 0 10px var(--soul-blue-bright);
             z-index: 999;
             width: 0%;
             transition: width 0.1s;
@@ -50,7 +52,6 @@
             filter: blur(1px);
             animation: sway 6s infinite ease-in-out;
             pointer-events: none;
-            transition: transform 0.1s ease-out;
         }
 
         @keyframes sway { 0%, 100% { transform: rotate(0deg); } 50% { transform: rotate(2deg); } }
@@ -71,15 +72,20 @@
         }
         @keyframes fall { to { transform: translateY(110vh); } }
 
+        /* الواجهة الأولى */
         #screen-one {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
             height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1), opacity 1s;
             z-index: 10;
             text-align: center;
+            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1), opacity 1s;
         }
 
         .main-title {
@@ -108,37 +114,50 @@
             border-radius: 4px;
         }
 
-        .start-btn:hover {
+        .start-btn:hover, .start-btn:active {
             background: var(--soul-blue-bright);
             color: var(--abyss);
             box-shadow: 0 0 40px var(--soul-blue-bright);
             transform: scale(1.05);
         }
 
+        /* الواجهة الثانية */
         #screen-two {
-            position: absolute;
-            top: 100vh;
+            position: fixed;
+            top: 0;
+            left: 0;
             width: 100%;
-            min-height: 100vh;
+            height: 100vh;
             background: var(--abyss);
-            transition: transform 1.2s cubic-bezier(0.8, 0, 0.2, 1);
             overflow-y: auto;
-            opacity: 0;
             z-index: 5;
+            opacity: 0;
+            pointer-events: none;
+            transition: opacity 0.8s ease;
+            padding-top: 50px;
         }
 
-        .active-one #screen-one { transform: translateY(-100vh); opacity: 0; }
-        .active-one #screen-two { transform: translateY(-100vh); opacity: 1; }
+        /* لما نفعل الانتقال */
+        body.active-one #screen-one {
+            transform: translateY(-100vh);
+            opacity: 0;
+            pointer-events: none;
+        }
+        
+        body.active-one #screen-two {
+            opacity: 1;
+            pointer-events: auto;
+        }
 
         .container {
             max-width: 1400px;
             margin: 0 auto;
-            padding: 100px 5%;
+            padding: 80px 5%;
         }
 
         .section-header {
             text-align: center;
-            margin-bottom: 100px;
+            margin-bottom: 80px;
             opacity: 0;
             transform: translateY(30px);
             transition: opacity 1s ease, transform 1s ease;
@@ -149,7 +168,7 @@
         }
         .section-header h2 {
             font-family: 'Cinzel';
-            font-size: 3.5rem;
+            font-size: 3rem;
             color: var(--soul-blue-bright);
             text-shadow: 0 0 20px var(--glow);
             letter-spacing: 4px;
@@ -158,7 +177,7 @@
         .content-grid {
             display: grid;
             grid-template-columns: repeat(auto-fit, minmax(350px, 1fr));
-            gap: 50px;
+            gap: 40px;
         }
 
         .card {
@@ -179,51 +198,27 @@
             transition: opacity 0.8s ease, transform 0.8s ease, border-color 0.5s, box-shadow 0.5s;
         }
 
-        .card::before {
-            content: '';
-            position: absolute;
-            top: -50%;
-            left: -50%;
-            width: 200%;
-            height: 200%;
-            background: radial-gradient(circle, rgba(56,189,248,0.08) 0%, transparent 70%);
-            opacity: 0;
-            transition: opacity 0.5s;
-            pointer-events: none;
-            z-index: 0;
-        }
-        .card:hover::before {
-            opacity: 1;
-        }
-
         .card:hover {
             border-color: var(--soul-blue-bright);
-            box-shadow: 0 0 30px var(--glow), 0 0 10px rgba(255,255,255,0.05);
-            transform: translateY(-8px) scale(1.01);
-        }
-        .card.visible:hover {
-            transform: translateY(-8px) scale(1.01);
-        }
-
-1.01);
+            box-shadow: 0 0 30px var(--glow);
+            transform: translateY(-5px) scale(1.01);
         }
 
         .card-image {
             width: 100%;
-            height: 200px;
-            object-fit: cover;
+            height: 180px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: var(--soul-blue-bright);
+            font-family: 'Cinzel';
+            font-size: 1.1rem;
+            letter-spacing: 3px;
             border-bottom: 1px solid rgba(56, 189, 248, 0.1);
-            transition: transform 0.5s ease, filter 0.5s ease;
-            filter: brightness(0.7) contrast(1.1);
-            background: linear-gradient(135deg, var(--deep-night), var(--abyss));
-        }
-        .card:hover .card-image {
-            transform: scale(1.05);
-            filter: brightness(0.9) contrast(1.2);
         }
 
         .card-content {
-            padding: 30px 35px 35px;
+            padding: 25px 30px 30px;
             display: flex;
             flex-direction: column;
             flex-grow: 1;
@@ -232,38 +227,32 @@
         .card h3 { 
             font-family: 'Cinzel'; 
             color: var(--soul-blue-bright); 
-            margin-bottom: 15px; 
-            font-size: 1.5rem; 
+            margin-bottom: 12px; 
+            font-size: 1.4rem; 
             letter-spacing: 1px;
             text-transform: uppercase;
-            position: relative;
-            z-index: 1;
         }
-        .card h3 small { font-family: 'Amiri'; color: var(--text-silver); font-size: 0.9rem; margin-right: 8px;}
+        .card h3 small { font-family: 'Amiri'; color: var(--text-silver); font-size: 0.85rem; margin-right: 8px;}
 
         .card p { 
             line-height: 1.8; 
             text-align: justify; 
             direction: rtl; 
             color: var(--text-silver); 
-            font-size: 1rem;
+            font-size: 0.95rem;
             flex-grow: 1;
-            position: relative;
-            z-index: 1;
         }
 
         .tag {
             font-family: 'Cinzel';
-            font-size: 0.75rem;
+            font-size: 0.7rem;
             color: var(--soul-blue-bright);
             background: rgba(14, 165, 233, 0.1);
-            padding: 5px 12px;
+            padding: 4px 10px;
             border-radius: 4px;
             align-self: flex-start;
             margin-top: 15px;
             letter-spacing: 1px;
-            position: relative;
-            z-index: 1;
         }
 
         .lore-box {
@@ -271,15 +260,15 @@
             background: linear-gradient(135deg, var(--abyss) 0%, #03060c 100%);
             border: 2px solid var(--soul-blue-bright);
             box-shadow: 0 0 50px rgba(56, 189, 248, 0.1);
-            padding: 50px;
+            padding: 40px;
         }
-        .lore-box h3 { font-size: 2.5rem; text-align: center;}
-        .lore-box p { font-size: 1.1rem; line-height: 2; }
+        .lore-box h3 { font-size: 2.2rem; text-align: center;}
+        .lore-box p { font-size: 1.05rem; line-height: 2; }
 
         footer {
-            margin-top: 100px;
+            margin-top: 80px;
             text-align: center;
-            padding: 50px;
+            padding: 40px;
             border-top: 1px solid #111;
             font-family: 'Cinzel';
             letter-spacing: 5px;
@@ -292,20 +281,15 @@
             transform: translateY(0);
         }
 
-        @keyframes pulse-glow {
-            0%, 100% { text-shadow: 0 0 20px var(--soul-blue-bright), 0 0 50px var(--soul-blue-dim); }
-            50% { text-shadow: 0 0 30px var(--soul-blue-bright), 0 0 80px var(--soul-blue-dim), 0 0 100px rgba(56,189,248,0.3); }
-        }
-
         @media (max-width: 768px) {
             .main-title { font-size: clamp(2rem, 12vw, 5rem); letter-spacing: 6px; }
             .start-btn { padding: 15px 50px; font-size: 1.4rem; }
-            .card-image { height: 160px; }
-            .content-grid { grid-template-columns: 1fr; gap: 30px; }
-            .container { padding: 60px 4%; }
-            .section-header h2 { font-size: 2.5rem; }
-            .lore-box { padding: 30px; }
-            .lore-box h3 { font-size: 1.8rem; }
+            .content-grid { grid-template-columns: 1fr; gap: 25px; }
+            .container { padding: 50px 4%; }
+            .section-header h2 { font-size: 2.2rem; }
+            .lore-box { padding: 25px; }
+            .lore-box h3 { font-size: 1.6rem; }
+            .card-image { height: 140px; font-size: 1rem; }
         }
     </style>
 </head>
@@ -314,13 +298,15 @@
     <div class="vines" id="vines"></div>
     <div class="rain-container" id="rain"></div>
 
+    <!-- الواجهة الأولى -->
     <div id="screen-one">
         <h1 class="main-title">HOLLOW KNIGHT</h1>
         <p style="color: var(--soul-blue-bright); margin-bottom: 20px; letter-spacing: 6px; font-family: 'Cinzel';">THE OBSIDIAN CHRONICLES</p>
         <p style="color: var(--text-silver); font-size: 1.2rem; max-width: 600px; line-height: 1.8; padding: 0 20px;">مرحباً بك في سجلات الهاوية. رحلة ملحمية عبر أنقاض هالونيست، حيث تلتقي الروح بالفراغ. اضغط للبدء...</p>
-        <button class="start-btn" id="startBtn" onclick="startJourney()">START</button>
+        <button class="start-btn" onclick="startJourney()">START</button>
     </div>
 
+    <!-- الواجهة الثانية -->
     <div id="screen-two">
         <div class="container">
             <div class="section-header" id="sectionHeader">
@@ -347,7 +333,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0a1929, #051018); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">⚔️ NAIL</div>
+                    <div class="card-image" style="background: linear-gradient(135deg, #0a1929, #051018);">⚔️ NAIL</div>
                     <div class="card-content">
                         <h3>WEAPONS | الأسلحة والدفاع</h3>
                         <p>رحلتك لا تعتمد على الهروب، بل على المواجهة. مسمارك (Nail) هو شرفك وقوتك الأساسية. تبدأ بـ "المسمار القديم" (Old Nail)، الصدئ والضعيف، لكن عبر الاستكشاف ستحصل على "Pale Ore" النادر، الذي يسمح لـ Nailsmith بصقله أربع مرات، ليصبح "المسمار النقي" (Pure Nail)، نصل أسطوري قادر على قطع القدر نفسه.</p>
@@ -356,7 +342,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0a1f1a, #051210); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">💨 DASH</div>
+                    <div class="card-image" style="background: linear-gradient(135deg, #0a1f1a, #051210);">💨 DASH</div>
                     <div class="card-content">
                         <h3>ABILITIES | القدرات الحركية</h3>
                         <p>هالونيست متاهة عملاقة، ولا يمكنك الوصول لأسرارها بلا قدرات خاصة. ستجد "Dash" (Mothwing Cloak) للتحرك السريع في الهواء، وتطوره "Shade Cloak" الذي يسمح لك بالمرور عبر الأعداء والأسلحة دون ضرر بفضل قوة الفراغ.</p>
@@ -365,7 +351,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #1a0a29, #100518); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">🗺️ MAP</div>
+                    <div class="card-image" style="background: linear-gradient(135deg, #1a0a29, #100518);">🗺️ MAP</div>
                     <div class="card-content">
                         <h3>LOCATIONS | مناطق المملكة</h3>
                         <p>ستتنقل بين هدوء Dirtmouth الحزين فوق الأرض، إلى Forgotten Crossroads التي لوثتها العدوى البرتقالية. ستزور Greenpath حيث الطبيعة الخضراء المورقة والمشعة بضوء Unn.</p>
@@ -374,7 +360,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0a0a29, #050518); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">⚫ VOID</div>
+                    <div class="card-image" style="background: linear-gradient(135deg, #0a0a29, #050518);">⚫ VOID</div>
                     <div class="card-content">
                         <h3>SOUL & VOID | الروح والفراغ</h3>
                         <p>هناك قوتان أساسيتان تحكمان هذا العالم. "الروح" (Soul) هي الطاقة الحيوية المشعة للأعداء والكائنات، التي تجمعها بالهجوم عليهم. "الفراغ" (Void) هو مادة الهاوية المظلمة والصامتة.</p>
@@ -383,7 +369,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #290a1a, #180510); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">👤 HORNET</div>
+                    <div class="card-image" style="background: linear-gradient(135deg, #290a1a, #180510);">👤 HORNET</div>
                     <div class="card-content">
                         <h3>CHARACTERS | الأساطير الحيّة</h3>
                         <p>لن تكون وحيداً في هذا الظلام. ستلتقي بـ "Hornet" الحارسة الملكية الأنيقة التي تختبر قوتك وتساعدك في فهم دورك.</p>
@@ -392,7 +378,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #1a290a, #101805); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">✦ CHARM</div>
+                    <div class="card-image" style="background: linear-gradient(135deg, #1a290a, #101805);">✦ CHARM</div>
                     <div class="card-content">
                         <h3>CHARMS | التعاويذ التفاعلية</h3>
                         <p>Charms هي عناصر سحرية تمنحك فوائد وقدرات سلبية (Passives). أنت تمتلك "Notches" (فتحات) محدودة لتجهيز هذه التعاويذ.</p>
@@ -401,7 +387,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #29290a, #181805); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">💰 GEO</div>
+                    <div class="card-image" style="background: linear-gradient(135deg, #29290a, #181805);">💰 GEO</div>
                     <div class="card-content">
                         <h3>ITEMS | الكنوز والعملات</h3>
                         <p>"Geo" هي العملة الأساسية في هالونيست، تتساقط من الأعداء وتجدها في الكهوف. ستحتاجها لشراء التعاويذ، تطوير المسمار، وفتح محطات Stag و Bench.</p>
@@ -410,7 +396,7 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0a2929, #051818); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">🚪 START</div>
+                    <div class="card-image" style="background: linear-gradient(135deg, #0a2929, #051818);">🚪 START</div>
                     <div class="card-content">
                         <h3>BEGINNING | العبور الملكي</h3>
                         <p>تبدأ رحلتك في "King's Pass"، الممر القديم الذي تسلكه الأوعية الهاربة من الهاوية. ستواجه أعداء ضعاف وتتعلم آليات الحركة والهجوم الأساسية.</p>
@@ -419,7 +405,54 @@
                 </div>
 
                 <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #290a29, #180518); display: flex; align-items: center; justify-content: center; color: var(--soul-blue-bright); font-family: 'Cinzel'; font-size: 1.2rem; letter-spacing: 3px;">💤 DREAM</div>
+                    <div class="card-image" style="background: linear-gradient(135deg, #290a29, #180518);">💤 DREAM</div>
                     <div class="card-content">
                         <h3>DREAMERS | الحالمون الثلاثة</h3>
-                        <p>هم حراس الختم على البيضة السوداء. وافقوا على النوم للأبد لحماية المملكة.
+                        <p>هم حراس الختم على البيضة السوداء. وافقوا على النوم للأبد لحماية المملكة. عليك إيجادهم وهزيمتهم في عالم الأحلام باستخدام Dream Nail.</p>
+                        <span class="tag">Seals</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image" style="background: linear-gradient(135deg, #291a0a, #181005);">⚔️ BOSS</div>
+                    <div class="card-content">
+                        <h3>BOSSES | الرؤساء والزعماء</h3>
+                        <p>هناك أكثر من 47 زعيماً مختلفاً، من "False Knight" الضعيف في Crossroads، إلى "The Hollow Knight" الملحمي المحبوس.</p>
+                        <span class="tag">Challenges</span>
+                    </div>
+                </div>
+
+                <div class="card">
+                    <div class="card-image" style="background: linear-gradient(135deg, #0a0a0a, #050505);">🔮 FATE</div>
+                    <div class="card-content">
+                        <h3>THE FATE | النهايات الخمسة</h3>
+                        <p>رحلتك لها نهايات مختلفة بناءً على اختياراتك. النهاية الأساسية "The Hollow Knight": أن تأخذ مكان الوعاء القديم وتحبس العدوى داخلك.</p>
+                        <span class="tag">Destiny</span>
+                    </div>
+                </div>
+            </div>
+
+            <footer id="mainFooter">
+                <div style="color: var(--soul-blue-bright); font-size: 1.8rem; text-shadow: 0 0 15px var(--glow);">MADE BY: MONTADER WALHAN</div>
+                <p style="margin-top: 15px; letter-spacing: 4px; color: var(--text-silver); opacity: 0.5;">&copy; 2026 | Hollow Knight Fan Project</p>
+            </footer>
+        </div>
+    </div>
+
+    <script>
+        function startJourney() {
+            // أضف الكلاس للجسم
+            document.body.classList.add('active-one');
+            
+            // فعل التمرير بعد الانتقال
+            setTimeout(() => {
+                document.body.style.overflow = 'hidden';
+                const screenTwo = document.getElementById('screen-two');
+                screenTwo.style.overflowY = 'auto';
+            }, 1200);
+        }
+
+        // المطر
+        function createRain() {
+            const container = document.getElementById('rain');
+            for(let i=0; i<60;
