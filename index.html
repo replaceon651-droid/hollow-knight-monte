@@ -17,14 +17,12 @@
         }
 
         * { margin: 0; padding: 0; box-sizing: border-box; }
-
+        
         html, body { 
             background-color: var(--abyss); 
             color: #fff; 
             font-family: 'Amiri', serif; 
-            overflow: hidden;
-            height: 100%;
-            width: 100%;
+            overflow-x: hidden;
         }
 
         .scroll-progress {
@@ -72,20 +70,16 @@
         }
         @keyframes fall { to { transform: translateY(110vh); } }
 
-        /* الواجهة الأولى */
-        #screen-one {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100vh;
+        .hero-section {
+            min-height: 100vh;
             display: flex;
             flex-direction: column;
             align-items: center;
             justify-content: center;
-            z-index: 10;
             text-align: center;
-            background: var(--abyss);
+            position: relative;
+            z-index: 10;
+            padding: 20px;
         }
 
         .main-title {
@@ -99,47 +93,12 @@
         }
         @keyframes titlesway { 0%, 100% { transform: scale(1); opacity: 0.9; } 50% { transform: scale(1.02); opacity: 1; } }
 
-        .start-btn {
-            font-family: 'Cinzel';
-            margin-top: 50px;
-            padding: 18px 80px;
-            background: transparent;
-            border: 1px solid var(--soul-blue-bright);
-            color: var(--soul-blue-bright);
-            font-size: 1.8rem;
-            cursor: pointer;
-            transition: 0.5s;
-            box-shadow: 0 0 15px var(--glow);
-            letter-spacing: 6px;
-            border-radius: 4px;
-            -webkit-tap-highlight-color: transparent;
-        }
-
-        .start-btn:hover, .start-btn:active {
-            background: var(--soul-blue-bright);
-            color: var(--abyss);
-            box-shadow: 0 0 40px var(--soul-blue-bright);
-            transform: scale(1.05);
-        }
-
-        /* الواجهة الثانية - مخفية افتراضياً */
-        #screen-two {
-            display: none;
-            position: absolute;
-            top: 0;
-            left: 0;
-            width: 100%;
-            min-height: 100vh;
-            background: var(--abyss);
-            z-index: 20;
-            overflow-y: auto;
-            overflow-x: hidden;
-        }
-
         .container {
             max-width: 1400px;
             margin: 0 auto;
             padding: 80px 5%;
+            position: relative;
+            z-index: 10;
         }
 
         .section-header {
@@ -191,17 +150,22 @@
             transform: translateY(-5px) scale(1.01);
         }
 
+        /* خلفيات ملونة بدل الصور */
         .card-image {
             width: 100%;
-            height: 180px;
+            height: 200px;
             display: flex;
             align-items: center;
             justify-content: center;
             color: var(--soul-blue-bright);
             font-family: 'Cinzel';
-            font-size: 1.1rem;
+            font-size: 1.3rem;
             letter-spacing: 3px;
             border-bottom: 1px solid rgba(56, 189, 248, 0.1);
+            transition: transform 0.5s ease;
+        }
+        .card:hover .card-image {
+            transform: scale(1.05);
         }
 
         .card-content {
@@ -270,13 +234,12 @@
 
         @media (max-width: 768px) {
             .main-title { font-size: clamp(2rem, 12vw, 5rem); letter-spacing: 6px; }
-            .start-btn { padding: 15px 50px; font-size: 1.4rem; }
             .content-grid { grid-template-columns: 1fr; gap: 25px; }
             .container { padding: 50px 4%; }
             .section-header h2 { font-size: 2.2rem; }
             .lore-box { padding: 25px; }
             .lore-box h3 { font-size: 1.6rem; }
-            .card-image { height: 140px; font-size: 1rem; }
+            .card-image { height: 160px; font-size: 1.1rem; }
         }
     </style>
 </head>
@@ -285,167 +248,191 @@
     <div class="vines" id="vines"></div>
     <div class="rain-container" id="rain"></div>
 
-    <!-- الواجهة الأولى -->
-    <div id="screen-one">
+    <div class="hero-section">
         <h1 class="main-title">HOLLOW KNIGHT</h1>
         <p style="color: var(--soul-blue-bright); margin-bottom: 20px; letter-spacing: 6px; font-family: 'Cinzel';">THE OBSIDIAN CHRONICLES</p>
-        <p style="color: var(--text-silver); font-size: 1.2rem; max-width: 600px; line-height: 1.8; padding: 0 20px;">مرحباً بك في سجلات الهاوية. رحلة ملحمية عبر أنقاض هالونيست، حيث تلتقي الروح بالفراغ. اضغط للبدء...</p>
-        <button class="start-btn" id="startBtn">START</button>
+        <p style="color: var(--text-silver); font-size: 1.2rem; max-width: 600px; line-height: 1.8; padding: 0 20px;">مرحباً بك في سجلات الهاوية. رحلة ملحمية عبر أنقاض هالونيست، حيث تلتقي الروح بالفراغ.</p>
     </div>
 
-    <!-- الواجهة الثانية -->
-    <div id="screen-two">
-        <div class="container">
-            <div class="section-header" id="sectionHeader">
-                <h2>THE ENCYCLOPEDIA VOID</h2>
-                <div style="width: 100px; height: 3px; background: var(--soul-blue-bright); margin: 20px auto; box-shadow: 0 0 10px var(--soul-blue-bright);"></div>
-            </div>
-
-            <div class="content-grid">
-                <div class="card lore-box">
-                    <h3><small>THE GREAT LORE |</small> السجل الملحمي الكامل</h3>
-                    <p>
-                        في البدء، قبل وجود الزمن أو العقل، كانت الأرض مظلمة وباردة، تسكنها حشرات بلا فكر، تتحرك بغريزة عمياء تحت ضوء "الإشعاع" (The Radiance)—إلهة الضوء القديمة والمجنونة التي وحدت الجميع في عقل خلية واحد صامت ومطيع. لكن، من وراء الأفق، وصل "الملك الشاحب" (The Pale King)، كائن عظيم من سلالة Wyrm، كان يمتلك قوة وهب العقل والشخصية والإرادة الحرة.
-                        <br><br>
-                        بنى الملك مملكته "هالونيست" (Hallownest)، واعداً إياها بالخلود. من ضوء منارته الملكية، منح الحشرات القدرة على التفكير، البناء، العبادة، والتحدث. ازدهرت المملكة وتوسعت تحت الأرض، وبُنيت المدن الشاهقة مثل "مدينة الدموع" وحُفرت الممرات المتقاطعة. لكن الإشعاع، التي تم نسيانها، لم تقبل السقوط.
-                        <br><br>
-                        بدأت Radiance بالظهور في أحلام الحشرات، أولاً كضوء مغرٍ، ثم كعدوى برتقالية قيحية (The Infection) تسلب العقول وتحول الأجساد إلى وحوش تنفجر بالضوء. حاول الملك كل شيء لإيقافها؛ بنى الحصون وتطوعت الجيوش، لكن العدوى كانت تخترق الأحلام. في محاولة يائسة، قرر الملك استخدام قوة "الفراغ" (The Void)—مادة غامضة ومظلمة تسكن أعمق نقطة في الهاوية، لا تملك عقلاً ولا إرادة، وبالتالي لا يمكن للعدوى أن تخترقها.
-                        <br><br>
-                        قام الملك بخلق ملايين "الأوعية" (Vessels)، كائنات من الفراغ محبوسة داخل قشور من النور، ورمى بها في قاع الهاوية. الهدف كان إيجاد وعاء "نقي" تماماً، بلا مشاعر، بلا فكر، وبلا إرادة ليكسرها، ليكون قادراً على حبس Radiance داخله للأبد. من بين ملايين الفشلة، صعد "Hollow Knight" الأصلي، وظن الملك أنه الوعاء المثالي.
-                        <br><br>
-                        تم ختم Hollow Knight داخل "البيضة السوداء" (The Black Egg) مع Radiance بداخله، وحُمي الختم بثلاثة "حالمين" (Dreamers) ناموا إلى الأبد لحراسته. ظن الجميع أن المملكة نُجيت، لكن Hollow Knight لم يكن نقياً؛ كان يحمل "بذرة" من المشاعر (ربما حب الأب أو الخوف)، مما سمح لـ Radiance باختراقه. ثم تسربت العدوى مرة أخرى، وسقطت هالونيست في صمت أبدي، مليئة بالوحوش الهائمة.
-                        <br><br>
-                        هنا تبدأ رحلتك. أنت وعاء آخر، وعاء صغير، مجهول الاسم، هربت من الهاوية وسمعت نداء هالونيست الميتة. أنت تحمل مسماراً قديماً، وعقلك خالي كالفراغ. مهمتك هي الصعود من الحطام، هزيمة الحالمين، مواجهة Hollow Knight الفاشل، واحتواء العدوى تماماً، أو كسر القيد نهائياً بمواجهة مصدر الضوء نفسه وتدميره للأبد بمساعدة الفراغ. أنت لست بطلاً، أنت مجرد ظل يحمل مسماراً ليغير مصير عالم ميت.
-                    </p>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0a1929, #051018);">⚔️ NAIL</div>
-                    <div class="card-content">
-                        <h3>WEAPONS | الأسلحة والدفاع</h3>
-                        <p>رحلتك لا تعتمد على الهروب، بل على المواجهة. مسمارك (Nail) هو شرفك وقوتك الأساسية. تبدأ بـ "المسمار القديم" (Old Nail)، الصدئ والضعيف، لكن عبر الاستكشاف ستحصل على "Pale Ore" النادر، الذي يسمح لـ Nailsmith بصقله أربع مرات، ليصبح "المسمار النقي" (Pure Nail)، نصل أسطوري قادر على قطع القدر نفسه.</p>
-                        <span class="tag">Arsenal</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0a1f1a, #051210);">💨 DASH</div>
-                    <div class="card-content">
-                        <h3>ABILITIES | القدرات الحركية</h3>
-                        <p>هالونيست متاهة عملاقة، ولا يمكنك الوصول لأسرارها بلا قدرات خاصة. ستجد "Dash" (Mothwing Cloak) للتحرك السريع في الهواء، وتطوره "Shade Cloak" الذي يسمح لك بالمرور عبر الأعداء والأسلحة دون ضرر بفضل قوة الفراغ.</p>
-                        <span class="tag">Movement</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #1a0a29, #100518);">🗺️ MAP</div>
-                    <div class="card-content">
-                        <h3>LOCATIONS | مناطق المملكة</h3>
-                        <p>ستتنقل بين هدوء Dirtmouth الحزين فوق الأرض، إلى Forgotten Crossroads التي لوثتها العدوى البرتقالية. ستزور Greenpath حيث الطبيعة الخضراء المورقة والمشعة بضوء Unn.</p>
-                        <span class="tag">Environment</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0a0a29, #050518);">⚫ VOID</div>
-                    <div class="card-content">
-                        <h3>SOUL & VOID | الروح والفراغ</h3>
-                        <p>هناك قوتان أساسيتان تحكمان هذا العالم. "الروح" (Soul) هي الطاقة الحيوية المشعة للأعداء والكائنات، التي تجمعها بالهجوم عليهم. "الفراغ" (Void) هو مادة الهاوية المظلمة والصامتة.</p>
-                        <span class="tag">Forces</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #290a1a, #180510);">👤 HORNET</div>
-                    <div class="card-content">
-                        <h3>CHARACTERS | الأساطير الحيّة</h3>
-                        <p>لن تكون وحيداً في هذا الظلام. ستلتقي بـ "Hornet" الحارسة الملكية الأنيقة التي تختبر قوتك وتساعدك في فهم دورك.</p>
-                        <span class="tag">NPCS</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #1a290a, #101805);">✦ CHARM</div>
-                    <div class="card-content">
-                        <h3>CHARMS | التعاويذ التفاعلية</h3>
-                        <p>Charms هي عناصر سحرية تمنحك فوائد وقدرات سلبية (Passives). أنت تمتلك "Notches" (فتحات) محدودة لتجهيز هذه التعاويذ.</p>
-                        <span class="tag">Customization</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #29290a, #181805);">💰 GEO</div>
-                    <div class="card-content">
-                        <h3>ITEMS | الكنوز والعملات</h3>
-                        <p>"Geo" هي العملة الأساسية في هالونيست، تتساقط من الأعداء وتجدها في الكهوف. ستحتاجها لشراء التعاويذ، تطوير المسمار، وفتح محطات Stag و Bench.</p>
-                        <span class="tag">Resources</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0a2929, #051818);">🚪 START</div>
-                    <div class="card-content">
-                        <h3>BEGINNING | العبور الملكي</h3>
-                        <p>تبدأ رحلتك في "King's Pass"، الممر القديم الذي تسلكه الأوعية الهاربة من الهاوية. ستواجه أعداء ضعاف وتتعلم آليات الحركة والهجوم الأساسية.</p>
-                        <span class="tag">Origin</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #290a29, #180518);">💤 DREAM</div>
-                    <div class="card-content">
-                        <h3>DREAMERS | الحالمون الثلاثة</h3>
-                        <p>هم حراس الختم على البيضة السوداء. وافقوا على النوم للأبد لحماية المملكة. عليك إيجادهم وهزيمتهم في عالم الأحلام باستخدام Dream Nail.</p>
-                        <span class="tag">Seals</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #291a0a, #181005);">⚔️ BOSS</div>
-                    <div class="card-content">
-                        <h3>BOSSES | الرؤساء والزعماء</h3>
-                        <p>هناك أكثر من 47 زعيماً مختلفاً، من "False Knight" الضعيف في Crossroads، إلى "The Hollow Knight" الملحمي المحبوس.</p>
-                        <span class="tag">Challenges</span>
-                    </div>
-                </div>
-
-                <div class="card">
-                    <div class="card-image" style="background: linear-gradient(135deg, #0a0a0a, #050505);">🔮 FATE</div>
-                    <div class="card-content">
-                        <h3>THE FATE | النهايات الخمسة</h3>
-                        <p>رحلتك لها نهايات مختلفة بناءً على اختياراتك. النهاية الأساسية "The Hollow Knight": أن تأخذ مكان الوعاء القديم وتحبس العدوى داخلك.</p>
-                        <span class="tag">Destiny</span>
-                    </div>
-                </div>
-            </div>
-
-            <footer id="mainFooter">
-                <div style="color: var(--soul-blue-bright); font-size: 1.8rem; text-shadow: 0 0 15px var(--glow);">MADE BY: MONTADER WALHAN</div>
-                <p style="margin-top: 15px; letter-spacing: 4px; color: var(--text-silver); opacity: 0.5;">&copy; 2026 | Hollow Knight Fan Project</p>
-            </footer>
+    <div class="container">
+        <div class="section-header" id="sectionHeader">
+            <h2>THE ENCYCLOPEDIA VOID</h2>
+            <div style="width: 100px; height: 3px; background: var(--soul-blue-bright); margin: 20px auto; box-shadow: 0 0 10px var(--soul-blue-bright);"></div>
         </div>
+
+        <div class="content-grid">
+            <div class="card lore-box">
+                <h3><small>THE GREAT LORE |</small> السجل الملحمي الكامل</h3>
+                <p>
+                    في البدء، قبل وجود الزمن أو العقل، كانت الأرض مظلمة وباردة، تسكنها حشرات بلا فكر، تتحرك بغريزة عمياء تحت ضوء "الإشعاع" (The Radiance)—إلهة الضوء القديمة والمجنونة التي وحدت الجميع في عقل خلية واحد صامت ومطيع. لكن، من وراء الأفق، وصل "الملك الشاحب" (The Pale King)، كائن عظيم من سلالة Wyrm، كان يمتلك قوة وهب العقل والشخصية والإرادة الحرة.
+                    <br><br>
+                    بنى الملك مملكته "هالونيست" (Hallownest)، واعداً إياها بالخلود. من ضوء منارته الملكية، منح الحشرات القدرة على التفكير، البناء، العبادة، والتحدث. ازدهرت المملكة وتوسعت تحت الأرض، وبُنيت المدن الشاهقة مثل "مدينة الدموع" وحُفرت الممرات المتقاطعة. لكن الإشعاع، التي تم نسيانها، لم تقبل السقوط.
+                    <br><br>
+                    بدأت Radiance بالظهور في أحلام الحشرات، أولاً كضوء مغرٍ، ثم كعدوى برتقالية قيحية (The Infection) تسلب العقول وتحول الأجساد إلى وحوش تنفجر بالضوء. حاول الملك كل شيء لإيقافها؛ بنى الحصون وتطوعت الجيوش، لكن العدوى كانت تخترق الأحلام. في محاولة يائسة، قرر الملك استخدام قوة "الفراغ" (The Void)—مادة غامضة ومظلمة تسكن أعمق نقطة في الهاوية، لا تملك عقلاً ولا إرادة، وبالتالي لا يمكن للعدوى أن تخترقها.
+                    <br><br>
+                    قام الملك بخلق ملايين "الأوعية" (Vessels)، كائنات من الفراغ محبوسة داخل قشور من النور، ورمى بها في قاع الهاوية. الهدف كان إيجاد وعاء "نقي" تماماً، بلا مشاعر، بلا فكر، وبلا إرادة ليكسرها، ليكون قادراً على حبس Radiance داخله للأبد. من بين ملايين الفشلة، صعد "Hollow Knight" الأصلي، وظن الملك أنه الوعاء المثالي.
+                    <br><br>
+                    تم ختم Hollow Knight داخل "البيضة السوداء" (The Black Egg) مع Radiance بداخله، وحُمي الختم بثلاثة "حالمين" (Dreamers) ناموا إلى الأبد لحراسته. ظن الجميع أن المملكة نُجيت، لكن Hollow Knight لم يكن نقياً؛ كان يحمل "بذرة" من المشاعر (ربما حب الأب أو الخوف)، مما سمح لـ Radiance باختراقه. ثم تسربت العدوى مرة أخرى، وسقطت هالونيست في صمت أبدي، مليئة بالوحوش الهائمة.
+                    <br><br>
+                    هنا تبدأ رحلتك. أنت وعاء آخر، وعاء صغير، مجهول الاسم، هربت من الهاوية وسمعت نداء هالونيست الميتة. أنت تحمل مسماراً قديماً، وعقلك خالي كالفراغ. مهمتك هي الصعود من الحطام، هزيمة الحالمين، مواجهة Hollow Knight الفاشل، واحتواء العدوى تماماً، أو كسر القيد نهائياً بمواجهة مصدر الضوء نفسه وتدميره للأبد بمساعدة الفراغ. أنت لست بطلاً، أنت مجرد ظل يحمل مسماراً ليغير مصير عالم ميت.
+                </p>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #0a1929, #051018);">⚔️ NAIL</div>
+                <div class="card-content">
+                    <h3>WEAPONS | الأسلحة والدفاع</h3>
+                    <p>رحلتك لا تعتمد على الهروب، بل على المواجهة. مسمارك (Nail) هو شرفك وقوتك الأساسية. تبدأ بـ "المسمار القديم" (Old Nail)، الصدئ والضعيف، لكن عبر الاستكشاف ستحصل على "Pale Ore" النادر، الذي يسمح لـ Nailsmith بصقله أربع مرات، ليصبح "المسمار النقي" (Pure Nail)، نصل أسطوري قادر على قطع القدر نفسه.</p>
+                    <span class="tag">Arsenal</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #0a1f1a, #051210);">💨 DASH</div>
+                <div class="card-content">
+                    <h3>ABILITIES | القدرات الحركية</h3>
+                    <p>هالونيست متاهة عملاقة، ولا يمكنك الوصول لأسرارها بلا قدرات خاصة. ستجد "Dash" (Mothwing Cloak) للتحرك السريع في الهواء، وتطوره "Shade Cloak" الذي يسمح لك بالمرور عبر الأعداء والأسلحة دون ضرر بفضل قوة الفراغ.</p>
+                    <span class="tag">Movement</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #1a0a29, #100518);">🗺️ MAP</div>
+                <div class="card-content">
+                    <h3>LOCATIONS | مناطق المملكة</h3>
+                    <p>ستتنقل بين هدوء Dirtmouth الحزين فوق الأرض، إلى Forgotten Crossroads التي لوثتها العدوى البرتقالية. ستزور Greenpath حيث الطبيعة الخضراء المورقة والمشعة بضوء Unn.</p>
+                    <span class="tag">Environment</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #0a0a29, #050518);">⚫ VOID</div>
+                <div class="card-content">
+                    <h3>SOUL & VOID | الروح والفراغ</h3>
+                    <p>هناك قوتان أساسيتان تحكمان هذا العالم. "الروح" (Soul) هي الطاقة الحيوية المشعة للأعداء والكائنات، التي تجمعها بالهجوم عليهم. "الفراغ" (Void) هو مادة الهاوية المظلمة والصامتة.</p>
+                    <span class="tag">Forces</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #290a1a, #180510);">👤 HORNET</div>
+                <div class="card-content">
+                    <h3>CHARACTERS | الأساطير الحيّة</h3>
+                    <p>لن تكون وحيداً في هذا الظلام. ستلتقي بـ "Hornet" الحارسة الملكية الأنيقة التي تختبر قوتك وتساعدك في فهم دورك.</p>
+                    <span class="tag">NPCS</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #1a290a, #101805);">✦ CHARM</div>
+                <div class="card-content">
+                    <h3>CHARMS | التعاويذ التفاعلية</h3>
+                    <p>Charms هي عناصر سحرية تمنحك فوائد وقدرات سلبية (Passives). أنت تمتلك "Notches" (فتحات) محدودة لتجهيز هذه التعاويذ.</p>
+                    <span class="tag">Customization</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #29290a, #181805);">💰 GEO</div>
+                <div class="card-content">
+                    <h3>ITEMS | الكنوز والعملات</h3>
+                    <p>"Geo" هي العملة الأساسية في هالونيست، تتساقط من الأعداء وتجدها في الكهوف. ستحتاجها لشراء التعاويذ، تطوير المسمار، وفتح محطات Stag و Bench.</p>
+                    <span class="tag">Resources</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #0a2929, #051818);">🚪 START</div>
+                <div class="card-content">
+                    <h3>BEGINNING | العبور الملكي</h3>
+                    <p>تبدأ رحلتك في "King's Pass"، الممر القديم الذي تسلكه الأوعية الهاربة من الهاوية. ستواجه أعداء ضعاف وتتعلم آليات الحركة والهجوم الأساسية.</p>
+                    <span class="tag">Origin</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #290a29, #180518);">💤 DREAM</div>
+                <div class="card-content">
+                    <h3>DREAMERS | الحالمون الثلاثة</h3>
+                    <p>هم حراس الختم على البيضة السوداء. وافقوا على النوم للأبد لحماية المملكة. عليك إيجادهم وهزيمتهم في عالم الأحلام باستخدام Dream Nail.</p>
+                    <span class="tag">Seals</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #291a0a, #181005);">⚔️ BOSS</div>
+                <div class="card-content">
+                    <h3>BOSSES | الرؤساء والزعماء</h3>
+                    <p>هناك أكثر من 47 زعيماً مختلفاً، من "False Knight" الضعيف في Crossroads، إلى "The Hollow Knight" الملحمي المحبوس.</p>
+                    <span class="tag">Challenges</span>
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-image" style="background: linear-gradient(135deg, #0a0a0a, #050505);">🔮 FATE</div>
+                <div class="card-content">
+                    <h3>THE FATE | النهايات الخمسة</h3>
+                    <p>رحلتك لها نهايات مختلفة بناءً على اختياراتك. النهاية الأساسية "The Hollow Knight": أن تأخذ مكان الوعاء القديم وتحبس العدوى داخلك.</p>
+                    <span class="tag">Destiny</span>
+                </div>
+            </div>
+        </div>
+
+        <footer id="mainFooter">
+            <div style="color: var(--soul-blue-bright); font-size: 1.8rem; text-shadow: 0 0 15px var(--glow);">MADE BY: MONTADER WALHAN</div>
+            <p style="margin-top: 15px; letter-spacing: 4px; color: var(--text-silver); opacity: 0.5;">&copy; 2026 | Hollow Knight Fan Project</p>
+        </footer>
     </div>
 
     <script>
-        // دالة الانتقال - مضمونة 100%
-        document.getElementById('startBtn').addEventListener('click', function() {
-            // إخفاء الواجهة الأولى
-            document.getElementById('screen-one').style.display = 'none';
+        // المطر
+        function createRain() {
+            var container = document.getElementById('rain');
+            for(var i = 0; i < 60; i++) {
+                var drop = document.createElement('div');
+                drop.className = 'rain-drop';
+                drop.style.left = Math.random() * 100 + 'vw';
+                drop.style.animationDuration = (Math.random() * 0.4 + 0.4) + 's';
+                drop.style.animationDelay = Math.random() * 2 + 's';
+                container.appendChild(drop);
+            }
+        }
+        
+        if(document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', createRain);
+        } else {
+            createRain();
+        }
 
-            // إظهار الواجهة الثانية
-            var screenTwo = document.getElementById('screen-two');
-            screenTwo.style.display = 'block';
+        // Scroll progress
+        window.addEventListener('scroll', function() {
+            var scrollTop = document.documentElement.scrollTop || document.body.scrollTop;
+            var scrollHeight = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if(scrollHeight > 0) {
+                var scrolled = (scrollTop / scrollHeight) * 100;
+                document.getElementById('scrollProgress').style.width = scrolled + '%';
+            }
+        });
 
-            // تفعيل التمرير
-            document.body.style.overflow = 'auto';
-            document.body.style.overflowX = 'hidden';
+        // Fade-in للبطاقات
+        var observerOptions = {
+            threshold: 0.1,
+            rootMargin: '0px 0px -50px 0px'
+        };
 
-            // Scroll to top
-            window.scrollTo(0, 0);
+        var observer = new IntersectionObserver(function(entries) {
+            entries.forEach(function(entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('visible');
+                }
+            });
+        }, observerOptions);
 
-            // تفعيل الـ fade-in للعناصر
-            setTimeout(function() {
-                document.getElementById('sectionHeader').classList.add('visible');
-                document.querySelectorAll('.card').forEach(function(card, index) {
-                    setTimeout(function() {
-                        card.classList.ad
+        document.querySelectorAll('.card').forEach(function(card) {
+            observer.observe(card);
+        });
+        observer.observe(document.getElementById('sectionHeader'));
+        observer.observe(document.getElementById('mainFooter'));
+    </script>
+</body>
+</html>
